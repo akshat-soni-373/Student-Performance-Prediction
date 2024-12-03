@@ -23,15 +23,8 @@ def index():
         if model is None:
             return "Model not loaded properly. Please check the model file."
         
-        # Log the attempt to render the index.html file
-        print("Attempting to render index.html...")
-
-        # Since index.html is in the same directory as app.py, load it manually
-        with open('index.html') as f:
-            return f.read()
-        
+        return render_template('index.html')
     except Exception as e:
-        print(f"Error while rendering the page: {str(e)}")
         return f"An error occurred while rendering the page: {str(e)}"
 
 @app.route('/predict', methods=['POST'])
@@ -41,8 +34,18 @@ def predict():
             return "Model is not loaded. Prediction can't be made."
         
         # Get input from the form
-        hours_studied = float(request.form['Hours_Studied'])
-        previous_scores = float(request.form['Previous_Scores'])
+        hours_studied = request.form.get('Hours_Studied')
+        previous_scores = request.form.get('Previous_Scores')
+
+        # Log the form data for debugging
+        print(f"Received inputs: Hours_Studied = {hours_studied}, Previous_Scores = {previous_scores}")
+
+        # Check if form data is valid
+        if not hours_studied or not previous_scores:
+            return "Invalid input data, please provide valid values for both fields."
+
+        hours_studied = float(hours_studied)
+        previous_scores = float(previous_scores)
 
         # Prepare the features array for prediction
         final_features = np.array([[hours_studied, previous_scores]])
