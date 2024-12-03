@@ -2,9 +2,10 @@ from flask import Flask, render_template, request
 import pickle
 import numpy as np
 
+# Initialize the Flask app
 app = Flask(__name__)
 
-# Load the saved model (make sure the model.pkl is in the same directory as app.py)
+# Load the saved model (make sure 'model.pkl' is in the same directory as app.py)
 model = pickle.load(open('model.pkl', 'rb'))
 
 @app.route('/')
@@ -29,5 +30,6 @@ def predict():
     # Return the result to the user (rendering the result in the HTML)
     return render_template('index.html', prediction_text=f'Predicted Performance Index: {output:.2f}')
 
+# Run the app only if this file is being executed directly
 if __name__ == "__main__":
     app.run(debug=True)
