@@ -30,6 +30,7 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
+        # Check if model is loaded
         if model is None:
             return "Model is not loaded. Prediction can't be made."
         
@@ -40,12 +41,15 @@ def predict():
         # Log the form data for debugging
         print(f"Received inputs: Hours_Studied = {hours_studied}, Previous_Scores = {previous_scores}")
 
-        # Check if form data is valid
+        # Validate input data
         if not hours_studied or not previous_scores:
-            return "Invalid input data, please provide valid values for both fields."
+            return "Both 'Hours Studied' and 'Previous Scores' must be provided."
 
-        hours_studied = float(hours_studied)
-        previous_scores = float(previous_scores)
+        try:
+            hours_studied = float(hours_studied)
+            previous_scores = float(previous_scores)
+        except ValueError:
+            return "Invalid input: Please provide valid numeric values for 'Hours Studied' and 'Previous Scores'."
 
         # Prepare the features array for prediction
         final_features = np.array([[hours_studied, previous_scores]])
@@ -54,7 +58,11 @@ def predict():
         prediction = model.predict(final_features)
         output = prediction[0]
 
+        # Log prediction result
+        print(f"Prediction result: {output}")
+
         return render_template('index.html', prediction_text=f'Predicted Performance Index: {output:.2f}')
+    
     except Exception as e:
         print(f"Error during prediction: {str(e)}")
         return f"An error occurred during prediction: {str(e)}"
