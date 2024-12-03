@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.getcwd())  # Set template folder to current working directory
 
 # Load the saved model (make sure the model.pkl is in the same directory as app.py)
 try:
@@ -23,7 +23,7 @@ def index():
         if model is None:
             return "Model not loaded properly. Please check the model file."
         
-        return render_template('index.html')
+        return render_template('index.html')  # Render index.html from the current directory
     except Exception as e:
         return f"An error occurred while rendering the page: {str(e)}"
 
