@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Performance Prediction</title>
     <style>
         body {
@@ -47,11 +45,6 @@
         .input-group label {
             margin-bottom: 5px;
         }
-        .error-message {
-            color: red;
-            text-align: center;
-            font-size: 1.2em;
-        }
     </style>
 </head>
 <body>
@@ -70,13 +63,8 @@
             </div>
             <input type="submit" value="Predict">
         </form>
-
         {% if prediction_text %}
-            <div class="result">{{ prediction_text }}</div>
-        {% endif %}
-        
-        {% if error_message %}
-            <div class="error-message">{{ error_message }}</div>
+        <div class="result">{{ prediction_text }}</div>
         {% endif %}
     </div>
 </body>
