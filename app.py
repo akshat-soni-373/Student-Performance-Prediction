@@ -3,7 +3,8 @@ import pickle
 import numpy as np
 import os
 
-app = Flask(__name__)
+# Set template_folder to the current directory
+app = Flask(__name__, template_folder='.')
 
 # Load the saved model (make sure the model.pkl is in the same directory as app.py)
 try:
@@ -23,15 +24,8 @@ def index():
         if model is None:
             return "Model not loaded properly. Please check the model file."
         
-        # Log the attempt to render the index.html file
-        print("Attempting to render index.html...")
-
-        # Since index.html is in the same directory as app.py, load it manually
-        with open('index.html') as f:
-            return f.read()
-        
+        return render_template('index.html')
     except Exception as e:
-        print(f"Error while rendering the page: {str(e)}")
         return f"An error occurred while rendering the page: {str(e)}"
 
 @app.route('/predict', methods=['POST'])
@@ -53,7 +47,6 @@ def predict():
 
         return render_template('index.html', prediction_text=f'Predicted Performance Index: {output:.2f}')
     except Exception as e:
-        print(f"Error during prediction: {str(e)}")
         return f"An error occurred during prediction: {str(e)}"
 
 if __name__ == "__main__":
