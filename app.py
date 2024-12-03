@@ -33,21 +33,32 @@ def predict():
     try:
         if model is None:
             return "Model is not loaded. Prediction can't be made."
-        
+
         # Get input from the form
         hours_studied = float(request.form['Hours_Studied'])
         previous_scores = float(request.form['Previous_Scores'])
 
+        # Print the inputs for debugging
+        print(f"Hours Studied: {hours_studied}, Previous Scores: {previous_scores}")
+
         # Prepare the features array for prediction
         final_features = np.array([[hours_studied, previous_scores]])
 
+        # Debug: Print the features array
+        print(f"Features for prediction: {final_features}")
+
         # Make prediction using the loaded model
         prediction = model.predict(final_features)
-        output = prediction[0]
 
+        # Print the model output for debugging
+        print(f"Prediction: {prediction}")
+
+        output = prediction[0]
         return render_template('index.html', prediction_text=f'Predicted Performance Index: {output:.2f}')
     except Exception as e:
+        print(f"Error during prediction: {str(e)}")
         return f"An error occurred during prediction: {str(e)}"
+
 
 if __name__ == "__main__":
     app.run(debug=True)
