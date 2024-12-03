@@ -21,32 +21,28 @@ def index():
     try:
         # Test model loading
         if model is None:
-            return render_template('index.html', error_message="Model not loaded properly. Please check the model file.")
+            return "Model not loaded properly. Please check the model file."
         
-        return render_template('index.html')
+        # Log the attempt to render the index.html file
+        print("Attempting to render index.html...")
+
+        # Since index.html is in the same directory as app.py, load it manually
+        with open('index.html') as f:
+            return f.read()
+        
     except Exception as e:
-        return render_template('index.html', error_message=f"An error occurred while rendering the page: {str(e)}")
+        print(f"Error while rendering the page: {str(e)}")
+        return f"An error occurred while rendering the page: {str(e)}"
 
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Check if model is loaded
         if model is None:
-            return render_template('index.html', error_message="Model is not loaded. Prediction can't be made.")
+            return "Model is not loaded. Prediction can't be made."
         
         # Get input from the form
-        hours_studied = request.form.get('Hours_Studied')
-        previous_scores = request.form.get('Previous_Scores')
-
-        # Validate input data
-        if not hours_studied or not previous_scores:
-            return render_template('index.html', error_message="Both 'Hours Studied' and 'Previous Scores' must be provided.")
-
-        try:
-            hours_studied = float(hours_studied)
-            previous_scores = float(previous_scores)
-        except ValueError:
-            return render_template('index.html', error_message="Invalid input: Please provide valid numeric values for 'Hours Studied' and 'Previous Scores'.")
+        hours_studied = float(request.form['Hours_Studied'])
+        previous_scores = float(request.form['Previous_Scores'])
 
         # Prepare the features array for prediction
         final_features = np.array([[hours_studied, previous_scores]])
@@ -56,9 +52,9 @@ def predict():
         output = prediction[0]
 
         return render_template('index.html', prediction_text=f'Predicted Performance Index: {output:.2f}')
-    
     except Exception as e:
-        return render_template('index.html', error_message=f"An error occurred during prediction: {str(e)}")
+        print(f"Error during prediction: {str(e)}")
+        return f"An error occurred during prediction: {str(e)}"
 
 if __name__ == "__main__":
     app.run(debug=True)
